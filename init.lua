@@ -95,6 +95,8 @@ vim.keymap.set("n", "<leader>ee", ":Explore<enter>")
 vim.keymap.set("n", "<leader>ev", ":Vexplore!<enter>")
 vim.keymap.set("n", "<leader>et", ":Texplore<enter>")
 
+vim.keymap.set("n", "U", "<C-r>")
+
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
