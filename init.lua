@@ -91,9 +91,11 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- SOME OF MY OWN REMAPS :)
-vim.keymap.set("n", "<leader>ee", ":Explore<enter>")
-vim.keymap.set("n", "<leader>ev", ":Vexplore!<enter>")
-vim.keymap.set("n", "<leader>et", ":Texplore<enter>")
+vim.keymap.set("n", "<leader>ne", ":Explore<enter>")
+vim.keymap.set("n", "<leader>nv", ":Vexplore!<enter>")
+vim.keymap.set("n", "<leader>nt", ":Texplore<enter>")
+
+vim.keymap.set("n", "<leader>nn", ":NERDTreeToggle<enter>")
 
 vim.keymap.set("n", "U", "<C-r>")
 
@@ -249,6 +251,8 @@ require('lazy').setup {
   { 'numToStr/Comment.nvim', opts = {} },
 
   { 'tpope/vim-fugitive' },
+
+  { 'preservim/nerdtree' },
 
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following lua:
@@ -563,6 +567,11 @@ require('lazy').setup {
         },
         bashls = {
           filetypes = { 'sh', '' },
+        },
+        csharp_ls = {
+          config = {
+            previewer = true
+          },
         },
         -- emmet_ls = {},
         -- ember = {
