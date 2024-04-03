@@ -91,13 +91,13 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- SOME OF MY OWN REMAPS :)
-vim.keymap.set("n", "<leader>ne", ":Explore<enter>")
-vim.keymap.set("n", "<leader>nv", ":Vexplore!<enter>")
-vim.keymap.set("n", "<leader>nt", ":Texplore<enter>")
+vim.keymap.set("n", "<leader>ne", ":Explore<enter>", { desc = "Use this buffer to explore" })
+vim.keymap.set("n", "<leader>nv", ":Vexplore!<enter>", { desc = "Open buffer in vertical split to explore" })
+vim.keymap.set("n", "<leader>nt", ":Texplore<enter>", { desc = "Open buffer in new tab to explore" })
 
-vim.keymap.set("n", "<leader>nn", ":NERDTreeToggle<enter>")
+vim.keymap.set("n", "<leader>nn", ":NERDTreeToggle<enter>", { desc = "Toggle side explorer" })
 
-vim.keymap.set("n", "U", "<C-r>")
+vim.keymap.set("n", "U", "<C-r>", { desc = "Re-do" })
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -250,28 +250,6 @@ require('lazy').setup {
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
 
-  { 'tpope/vim-fugitive' },
-
-  { 'preservim/nerdtree' },
-
-  -- Here is a more advanced example where we pass configuration
-  -- options to `gitsigns.nvim`. This is equivalent to the following lua:
-  --    require('gitsigns').setup({ ... })
-  --
-  -- See `:help gitsigns` to understand what the configuration keys do
-  { -- Adds git related signs to the gutter, as well as utilities for managing changes
-    'lewis6991/gitsigns.nvim',
-    opts = {
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
-    },
-  },
-
   -- NOTE: Plugins can also be configured to run lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
@@ -302,6 +280,91 @@ require('lazy').setup {
         ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
       }
     end,
+  },
+
+  { 'tpope/vim-fugitive' },
+
+  { 'preservim/nerdtree' },
+
+  {
+    'mfussengger/nvim-dap',
+    dependencies = {
+      {
+        "rcarriga/nvim-dap-ui",
+        dependencies = { "nvim-neotest/nvim-nio" },
+        keys = {
+          { "<leader>du", function() require("dapui").toggle() end, desc = "Dap UI" },
+          { "<leader>de", function() require("dapui").eval() end, desc = "Eval" },
+        },
+        opts = {},
+
+        -- IDK why the LSP complains about dap.listeners, but it seems to work
+        config = function (_, opts)
+          local dap = require("dap")
+          local dapui = require("dapui")
+          dapui.setup(opts)
+          dap.listeners.after.event_initialized["dapui_config"] = function ()
+            dapui.open({})
+          end
+          dap.listeners.after.event_terminated["dapui_config"] = function ()
+            dapui.close({})
+          end
+          dap.listeners.after.event_exited["dapui_config"] = function ()
+            dapui.close({})
+          end
+        end,
+      },
+
+      {
+        "theHamsta/nvim-dap-virtual-text",
+        opts = {},
+      },
+
+      {
+        'jay-babu/mason-nvim-dap.nvim',
+        dependencies = "mason.vim",
+        cmd = { "DapInstall", "DapUninstall" },
+        opts = {
+          automatic_installation = true,
+          handlers = {},
+          ensure_installed = {
+            -- NOTE: Add a debugger for each language here
+          },
+        },
+      },
+    },
+
+    -- IDK why the LSP complains about all require("dap") functions, but it seems to work
+    keys = {
+      { "<leader>bb", function() require("dap").toggle_breakpoint() end, desc = "Toggle breakpoint" },
+
+      { "<F5>", function() require("dap").continue() end, desc = "Continue" },
+      { "<F10>", function() require("dap").step_over() end, desc = "Step over" },
+      { "<F11>", function() require("dap").step_into() end, desc = "Step into" },
+      { "<F12>", function() require("dap").step_out() end, desc = "Step out" },
+      { "<leader>bc", function() require("dap").continue() end, desc = "Continue" },
+      { "<leader>bo", function() require("dap").step_over() end, desc = "Step over" },
+      { "<leader>bi", function() require("dap").step_into() end, desc = "Step into" },
+      { "<leader>bu", function() require("dap").step_out() end, desc = "Step out" },
+    },
+  },
+
+  -- Here is a more advanced example where we pass configuration
+  -- options to `gitsigns.nvim`. This is equivalent to the following lua:
+  --    require('gitsigns').setup({ ... })
+  --
+  -- See `:help gitsigns` to understand what the configuration keys do
+  { -- Adds git related signs to the gutter, as well as utilities for managing changes
+    'lewis6991/gitsigns.nvim',
+    opts = {
+      signs = {
+        add = { text = '+' },
+        change = { text = '~' },
+        delete = { text = '_' },
+        topdelete = { text = '‾' },
+        changedelete = { text = '~' },
+      },
+    },
   },
 
   -- NOTE: Plugins can specify dependencies.
