@@ -90,14 +90,32 @@ P.S. You can delete this when you're done too. It's your config now! :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
--- SOME OF MY OWN REMAPS :)
+-- SOME OF MY OWN KEYMAPS :)
+-- ================================================================================================================
+
 vim.keymap.set("n", "<leader>ne", ":Explore<enter>", { desc = "Use this buffer to explore" })
 vim.keymap.set("n", "<leader>nv", ":Vexplore!<enter>", { desc = "Open buffer in vertical split to explore" })
+vim.keymap.set("n", "<leader>nl", ":Vexplore<enter>", { desc = "Open buffer in vertical split on the left to explore" })
 vim.keymap.set("n", "<leader>nt", ":Texplore<enter>", { desc = "Open buffer in new tab to explore" })
 
 vim.keymap.set("n", "<leader>nn", ":NERDTreeToggle<enter>", { desc = "Toggle side explorer" })
+vim.keymap.set("n", "<leader>t", ":terminal<enter>", { desc = "Pull up a terminal in the current window" })
 
 vim.keymap.set("n", "U", "<C-r>", { desc = "Re-do" })
+
+-- TODO: KEYMAPS to resize windows
+
+-- Stolen from PRIME, this centers my cursor after CTRL+U or CTRL+D to go up and down half page
+vim.keymap.set("n", "<C-d>", "<C-d>zz", {noremap = true, silent = true})
+vim.keymap.set("n", "<C-u>", "<C-u>zz", {noremap = true, silent = true})
+
+-- To search word (and search back) centering the screen (inspired by the ones above!)
+vim.keymap.set("n", "*", "*zz", {noremap = true, silent = true})
+vim.keymap.set("n", "#", "#zz", {noremap = true, silent = true})
+vim.keymap.set("n", "n", "nzz", {noremap = true, silent = true})
+vim.keymap.set("n", "N", "Nzz", {noremap = true, silent = true})
+
+-- ================================================================================================================
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -160,14 +178,12 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- Set highlight on search, but clear on pressing <Esc> in normal mode
+vim.opt.hlsearch = true
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
-vim.keymap.set("n", "<C-d>", "<C-d>zz", {noremap = true, silent = true})
-vim.keymap.set("n", "<C-u>", "<C-u>zz", {noremap = true, silent = true})
-
--- Set highlight on search, but clear on pressing <Esc> in normal mode
-vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
@@ -250,6 +266,74 @@ require('lazy').setup {
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
 
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    build = function()
+      vim.fn["mkdp#util#install"]()
+    end,
+    keys = {
+    {
+      "<leader>pv",
+        ft = "markdown",
+        "<cmd>MarkdownPreviewToggle<cr>",
+        desc = "Markdown Preview",
+      },
+    },
+    config = function()
+      vim.cmd([[do FileType]])
+    end,
+  },
+
+  {
+    "lukas-reineke/headlines.nvim",
+    opts = function()
+      local opts = {}
+      for _, ft in ipairs({}) do
+        opts[ft] = {
+          headline_highlights = {},
+          bullets = {},
+        }
+        for i = 1, 6 do
+          local hl = "Headline" .. i
+          vim.api.nvim_set_hl(0, hl, { link = "Headline", default = true })
+          table.insert(opts[ft].headline_highlights, hl)
+        end
+      end
+      return opts
+    end,
+    ft = { "markdown", "norg", "rmd", "org" },
+    config = function(_, opts)
+      vim.schedule(
+        function ()
+          require("headlines").setup(opts)
+          require("headlines").refresh()
+        end
+      )
+    end,
+  },
+
+  {
+    "nvimtools/none-ls.nvim",
+    optional = true,
+    opts = function(_, opts)
+      local nls = require("null-ls")
+      opts.sources = vim.list_extend(opts.sources or {}, {
+        nls.builtins.diagnostics.markdownlint,
+      })
+    end,
+  },
+
+  {
+    "mfussenegger/nvim-lint",
+    optional = true,
+    opts = {
+      linters_by_ft = {
+        markdown = { "markdownlint" },
+      },
+    },
+  },
+
   -- NOTE: Plugins can also be configured to run lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
@@ -285,69 +369,6 @@ require('lazy').setup {
   { 'tpope/vim-fugitive' },
 
   { 'preservim/nerdtree' },
-
-  {
-    'mfussengger/nvim-dap',
-    dependencies = {
-      {
-        "rcarriga/nvim-dap-ui",
-        dependencies = { "nvim-neotest/nvim-nio" },
-        keys = {
-          { "<leader>du", function() require("dapui").toggle() end, desc = "Dap UI" },
-          { "<leader>de", function() require("dapui").eval() end, desc = "Eval" },
-        },
-        opts = {},
-
-        -- IDK why the LSP complains about dap.listeners, but it seems to work
-        config = function (_, opts)
-          local dap = require("dap")
-          local dapui = require("dapui")
-          dapui.setup(opts)
-          dap.listeners.after.event_initialized["dapui_config"] = function ()
-            dapui.open({})
-          end
-          dap.listeners.after.event_terminated["dapui_config"] = function ()
-            dapui.close({})
-          end
-          dap.listeners.after.event_exited["dapui_config"] = function ()
-            dapui.close({})
-          end
-        end,
-      },
-
-      {
-        "theHamsta/nvim-dap-virtual-text",
-        opts = {},
-      },
-
-      {
-        'jay-babu/mason-nvim-dap.nvim',
-        dependencies = "mason.vim",
-        cmd = { "DapInstall", "DapUninstall" },
-        opts = {
-          automatic_installation = true,
-          handlers = {},
-          ensure_installed = {
-            -- NOTE: Add a debugger for each language here
-          },
-        },
-      },
-    },
-
-    -- IDK why the LSP complains about all require("dap") functions, but it seems to work
-    keys = {
-      { "<leader>bb", function() require("dap").toggle_breakpoint() end, desc = "Toggle breakpoint" },
-
-      { "<F5>", function() require("dap").continue() end, desc = "Continue" },
-      { "<F10>", function() require("dap").step_over() end, desc = "Step over" },
-      { "<F11>", function() require("dap").step_into() end, desc = "Step into" },
-      { "<F12>", function() require("dap").step_out() end, desc = "Step out" },
-      { "<leader>bc", function() require("dap").continue() end, desc = "Continue" },
-      { "<leader>bo", function() require("dap").step_over() end, desc = "Step over" },
-      { "<leader>bi", function() require("dap").step_into() end, desc = "Step into" },
-      { "<leader>bu", function() require("dap").step_out() end, desc = "Step out" },
-    },
-  },
 
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following lua:
@@ -479,6 +500,59 @@ require('lazy').setup {
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
     end,
+  },
+
+  -- Hardpoon
+  {
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function ()
+      -- Harpoon setup, copy - pasta-ed from the repo's README.md
+      local harpoon = require("harpoon")
+      harpoon.setup({})
+
+      -- basic telescope configuration
+      local conf = require("telescope.config").values
+      local function toggle_telescope(harpoon_files)
+        local file_paths = {}
+        for _, item in ipairs(harpoon_files.items) do
+          table.insert(file_paths, item.value)
+        end
+
+        require("telescope.pickers").new({}, {
+          prompt_title = "Harpoon",
+          finder = require("telescope.finders").new_table({
+            results = file_paths,
+          }),
+          previewer = conf.file_previewer({}),
+          sorter = conf.generic_sorter({}),
+        }):find()
+      end
+      vim.keymap.set("n", "<leader>ht", function() toggle_telescope(harpoon:list()) end,
+        { desc = "Open harpoon window" })
+
+    end,
+    keys = {
+      { "<leader>ha", function() require("harpoon"):list():add() end, desc = "Add file to Harpoon" },
+      { "<leader>hd", function() require("harpoon"):list():remove() end, desc = "Remove file from Harpoon" },
+      { "<leader>hc", function() require("harpoon"):list():clear() end, desc = "Clear all from Harpoon" },
+
+      { "<leader>hh", function() local harpoon = require("harpoon") harpoon.ui:toggle_quick_menu(harpoon:list()) end, desc = "Toggle Harpoon quick menu" },
+
+      { "<leader>1", function() require("harpoon"):list():select(1) end, desc = "Harpoon to file 1" },
+      { "<leader>2", function() require("harpoon"):list():select(2) end, desc = "Harpoon to file 2" },
+      { "<leader>3", function() require("harpoon"):list():select(3) end, desc = "Harpoon to file 3" },
+      { "<leader>4", function() require("harpoon"):list():select(4) end, desc = "Harpoon to file 4" },
+      { "<leader>5", function() require("harpoon"):list():select(5) end, desc = "Harpoon to file 5" },
+      { "<leader>6", function() require("harpoon"):list():select(6) end, desc = "Harpoon to file 6" },
+      { "<leader>7", function() require("harpoon"):list():select(7) end, desc = "Harpoon to file 7" },
+      { "<leader>8", function() require("harpoon"):list():select(8) end, desc = "Harpoon to file 8" },
+      { "<leader>9", function() require("harpoon"):list():select(9) end, desc = "Harpoon to file 9" },
+
+      { "<leader>hp", function() end, desc = "Prev Harpoon list buffer" },
+      { "<leader>hn", function() end, desc = "Next Harpoon list buffer" },
+    },
   },
 
   { -- LSP Configuration & Plugins
@@ -636,6 +710,7 @@ require('lazy').setup {
             previewer = true
           },
         },
+        marksman = {},
         -- emmet_ls = {},
         -- ember = {
         --   filetypes = { 'handlebars', 'typescript', 'javascript', 'typescript.glimmer', 'javascript.glimmer', 'htmldjango' },
@@ -832,10 +907,6 @@ require('lazy').setup {
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
-      -- Load the colorscheme here
-      -- vim.cmd.colorscheme 'tokyonight-night'
-      -- vim.cmd.colorscheme 'elflord'
-      -- vim.cmd.colorscheme 'desert'
 
       -- You can configure highlights by doing something like
       -- vim.cmd.hi 'Comment gui=none'
@@ -853,8 +924,12 @@ require('lazy').setup {
         mirage = true,
       }
 
+      -- Load the colorscheme here
+      -- vim.cmd.colorscheme 'tokyonight-night'
       vim.cmd.colorscheme 'ayu-dark'
+      -- vim.cmd.colorscheme 'minischeme'
       -- vim.cmd.colorscheme 'ayu-mirage'
+      -- vim.cmd.colorscheme 'desert'
     end,
   },
   -- -- Highlight todo, notes, etc in comments
