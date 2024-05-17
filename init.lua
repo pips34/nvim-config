@@ -122,6 +122,8 @@ vim.keymap.set("n", "N", "Nzz", {noremap = true, silent = true})
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
+vim.opt.colorcolumn = "120"
+
 -- Make line numbers default
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -1007,6 +1009,62 @@ require('lazy').setup {
       --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
       --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+    end,
+  },
+
+  {'nvim-neotest/nvim-nio'},
+
+  {
+    'mfussenegger/nvim-dap',
+    config = function()
+      local dap = require('dap')
+      dap.adapters.coreclr = {
+        type = 'executable',
+        command = '/usr/local/netcoredbg',
+        args = {'--interpreter=vscode'},
+      }
+      dap.configurations.cs = {
+        {
+          type = 'coreclr',
+          name = 'launch - netcoredbg',
+          request = 'launch',
+          program = function()
+            return vim.fn.input('Path to dll: ', vim.fn.getcwd() .. '/bin/Debug/net8.0/', 'file')
+          end,
+        }
+      }
+
+      vim.fn.sign_define('DapBreakpoint', { text = '🐞', texthl = '', linehl = '', numhl = '' })
+
+      vim.api.nvim_set_keymap('n', '<F5>', ":lua require('dap').continue()<CR>", { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', '<F6>', ":lua require('dap').step_over()<CR>", { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', '<F7>', ":lua require('dap').step_into()<CR>", { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', '<F8>', ":lua require('dap').step_out()<CR>", { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', '<leader>b', ":lua require('dap').toggle_breakpoint()<CR>", { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', '<Leader>B', ":lua require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>", { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', '<Leader>lp', ":lua require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>", { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', '<Leader>dr', ":lua require('dap').repl.open()<CR>", { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', '<Leader>dl', ":lua require('dap').run_last()<CR>", { noremap = true, silent = true })
+    end,
+  },
+  {
+    'rcarriga/nvim-dap-ui',
+    config = function()
+      local dap, dapui = require('dap'), require('dapui')
+      dapui.setup()
+
+      dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open()
+      end
+
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close()
+      end
+
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close()
+      end
+
     end,
   },
 
