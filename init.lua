@@ -106,14 +106,14 @@ vim.keymap.set("n", "U", "<C-r>", { desc = "Re-do" })
 -- TODO: KEYMAPS to resize windows
 
 -- Stolen from PRIME, this centers my cursor after CTRL+U or CTRL+D to go up and down half page
-vim.keymap.set("n", "<C-d>", "<C-d>zz", {noremap = true, silent = true})
-vim.keymap.set("n", "<C-u>", "<C-u>zz", {noremap = true, silent = true})
+vim.keymap.set("n", "<C-d>", "<C-d>zz", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-u>", "<C-u>zz", { noremap = true, silent = true })
 
 -- To search word (and search back) centering the screen (inspired by the ones above!)
-vim.keymap.set("n", "*", "*zz", {noremap = true, silent = true})
-vim.keymap.set("n", "#", "#zz", {noremap = true, silent = true})
-vim.keymap.set("n", "n", "nzz", {noremap = true, silent = true})
-vim.keymap.set("n", "N", "Nzz", {noremap = true, silent = true})
+vim.keymap.set("n", "*", "*zz", { noremap = true, silent = true })
+vim.keymap.set("n", "#", "#zz", { noremap = true, silent = true })
+vim.keymap.set("n", "n", "nzz", { noremap = true, silent = true })
+vim.keymap.set("n", "N", "Nzz", { noremap = true, silent = true })
 
 -- ================================================================================================================
 
@@ -224,7 +224,7 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 --  Try it with `yap` in normal mode
 --  See `:help vim.highlight.on_yank()`
 vim.api.nvim_create_autocmd('TextYankPost', {
-  desc = 'Highlight when yanking (copying) text',
+  desc = 'Highlight when yanking text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
     vim.highlight.on_yank()
@@ -253,6 +253,7 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup {
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
+
   -- 'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   { 'windwp/nvim-autopairs', event = 'InsertEnter', config = true },
 
@@ -367,8 +368,6 @@ require('lazy').setup {
       }
     end,
   },
-
-  { 'tpope/vim-fugitive' },
 
   { 'preservim/nerdtree' },
 
@@ -622,7 +621,7 @@ require('lazy').setup {
 
           -- Jump to the implementation of the word under your cursor.
           --  Useful when your language has ways of declaring types without an actual implementation.
-          map('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+          map('gi', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
 
           -- Jump to the type of the word under your cursor.
           --  Useful when you're not sure what type a variable is and you want to see
@@ -1051,7 +1050,22 @@ require('lazy').setup {
     'rcarriga/nvim-dap-ui',
     config = function()
       local dap, dapui = require('dap'), require('dapui')
-      dapui.setup()
+      dapui.setup {
+        icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
+        controls = {
+          icons = {
+            pause = '⏸',
+            play = '▶',
+            step_into = '⏎',
+            step_over = '⏭',
+            step_out = '⏮',
+            step_back = 'b',
+            run_last = '▶▶',
+            terminate = '⏹',
+            disconnect = '⏏',
+          },
+        },
+      }
 
       dap.listeners.after.event_initialized["dapui_config"] = function()
         dapui.open()
