@@ -115,6 +115,12 @@ vim.keymap.set("n", "#", "#zz", { noremap = true, silent = true })
 vim.keymap.set("n", "n", "nzz", { noremap = true, silent = true })
 vim.keymap.set("n", "N", "Nzz", { noremap = true, silent = true })
 
+-- When using 'f' / F' and 't' / 'T', I like to invert the behavior of ',' and ';'
+-- So that, if I press 'f' or 't', I'll search forwards and keep searching forwards with ',', and backwards with ';'
+-- If I press 'F' or 'T', I'll search backwards and keep searching backwards with ',', and forwards with ';'
+vim.api.nvim_set_keymap("n", ";", ",", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", ",", ";", { noremap = true, silent = true })
+
 -- ================================================================================================================
 
 -- [[ Setting options ]]
