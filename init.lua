@@ -121,6 +121,9 @@ vim.keymap.set("n", "N", "Nzz", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", ";", ",", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", ",", ";", { noremap = true, silent = true })
 
+vim.api.nvim_set_keymap("x", ";", ",", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("x", ",", ";", { noremap = true, silent = true })
+
 -- ================================================================================================================
 
 -- [[ Setting options ]]
@@ -260,8 +263,50 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup {
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
 
-  -- 'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   { 'windwp/nvim-autopairs', event = 'InsertEnter', config = true },
+  { 'nvim-tree/nvim-web-devicons' },
+
+  {
+    'prettier/vim-prettier',
+    run = 'npm install',
+    ft = {'javascript', 'typescript', 'css', 'scss', 'json', 'markdown'},
+    config = function()
+      vim.g['prettier#config#config_precedence'] = 'prefer-file'
+      vim.g['prettier#config#trailing_comma'] = 'es5'
+      vim.g['prettier#config#single_quote'] = false
+      vim.g['prettier#config#jsx_single_quote'] = false
+      vim.g['prettier#config#tab_width'] = 4
+      vim.g['prettier#config#use_tabs'] = false
+      vim.api.nvim_set_keymap('n', '<leader>p', ':Prettier<CR>', { noremap = true, silent = true })
+      vim.cmd([[
+            autocmd BufWritePre *.js,*.jsx,*.ts,*.tsx,*.css,*.scss,*.json,*.md Prettier
+            ]])
+    end,
+  },
+
+  {
+    'jose-elias-alvarez/null-ls.nvim',
+    requires = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local null_ls = require('null-ls')
+      null_ls.setup({
+        sources = {
+          null_ls.builtins.formatting.prettier.with({
+            extra_filetypes = { 'javascript', 'typescript', 'css', 'scss', 'json', 'markdown' },
+          }),
+        },
+      })
+
+      -- Keybinding for Prettier
+      vim.api.nvim_set_keymap('n', '<leader>p', ':lua vim.lsp.buf.format({ async = true })<CR>', { noremap = true, silent = true })
+
+      -- Autocommand to format on save
+      vim.cmd([[
+            autocmd BufWritePre *.js,*.jsx,*.ts,*.tsx,*.css,*.scss,*.json,*.md lua vim.lsp.buf.format({ async = true })
+            ]])
+    end,
+  },
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -358,22 +403,22 @@ require('lazy').setup {
   -- after the plugin has been loaded:
   --  config = function() ... end
 
-  { -- Useful plugin to show you pending keybinds.
-    'folke/which-key.nvim',
-    event = 'VimEnter', -- Sets the loading event to 'VimEnter'
-    config = function() -- This is the function that runs, AFTER loading
-      require('which-key').setup()
-
-      -- Document existing key chains
-      require('which-key').register {
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-      }
-    end,
-  },
+  -- { -- Useful plugin to show you pending keybinds.
+  --   'folke/which-key.nvim',
+  --   event = 'VimEnter', -- Sets the loading event to 'VimEnter'
+  --   config = function() -- This is the function that runs, AFTER loading
+  --     require('which-key').setup()
+  --
+  --     -- Document existing key chains
+  --     require('which-key').register {
+  --       ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
+  --       ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
+  --       ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
+  --       ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
+  --       ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+  --     }
+  --   end,
+  -- },
 
   { 'preservim/nerdtree' },
 
@@ -702,13 +747,6 @@ require('lazy').setup {
         clangd = {},
         -- gopls = {},
         pyright = {},
-        html = {
-          capabilities = html_capabilities,
-          filetypes = { 'html', 'templ', 'htmldjango' },
-        },
-        quick_lint_js = {
-          filetypes = { 'javascript', 'typescript', 'html', 'htmldjango' },
-        },
         bashls = {
           filetypes = { 'sh', '' },
         },
@@ -718,7 +756,6 @@ require('lazy').setup {
           },
         },
         marksman = {},
-        -- emmet_ls = {},
         -- ember = {
         --   filetypes = { 'handlebars', 'typescript', 'javascript', 'typescript.glimmer', 'javascript.glimmer', 'htmldjango' },
         -- },
@@ -728,11 +765,51 @@ require('lazy').setup {
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
         --
-        -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {},
-        tailwindcss = {},
-        jdtls = {},  -- For Java
         --
+
+        -- But for many setups, the LSP (`tsserver`) will work just fine
+        -- DEPRECATED
+        -- tsserver = {
+        --   on_attach = function(_, bufnr)
+        --     vim.api.nvim_buf_set_keymap(bufnr, 'i', '<C-y>', 'compe#confirm("<C-y>")', { noremap = true, silent = true, expr = true })
+        --     vim.api.nvim_buf_set_keymap(bufnr, 'i', '<C-y>', 'emmet#expandAbbr()', { noremap = true, silent = true, expr = true })
+        --   end
+        -- },
+
+        -- ts_ls = {
+        --   on_attach = function(_, bufnr)
+        --     vim.api.nvim_buf_set_keymap(bufnr, 'i', '<C-y>', 'compe#confirm("<C-y>")', { noremap = true, silent = true, expr = true })
+        --     vim.api.nvim_buf_set_keymap(bufnr, 'i', '<C-y>', 'emmet#expandAbbr()', { noremap = true, silent = true, expr = true })
+        --   end
+        -- },
+
+        tailwindcss = {},
+
+        html = {
+          capabilities = html_capabilities,
+          filetypes = { 'html', 'templ', 'htmldjango' },
+          on_attach = function(_, bufnr)
+            vim.api.nvim_buf_set_keymap(bufnr, 'i', '<C-y>', 'compe#confirm("<C-y>")', { noremap = true, silent = true, expr = true })
+            vim.api.nvim_buf_set_keymap(bufnr, 'i', '<C-y>', 'emmet#expandAbbr()', { noremap = true, silent = true, expr = true })
+          end
+        },
+
+        emmet_ls = {
+          filetypes = { 'html', 'templ', 'htmldjango', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
+          on_attach = function(_, bufnr)
+            vim.api.nvim_buf_set_keymap(bufnr, 'i', '<C-y>', 'compe#confirm("<C-y>")', { noremap = true, silent = true, expr = true })
+            vim.api.nvim_buf_set_keymap(bufnr, 'i', '<C-y>', 'emmet#expandAbbr()', { noremap = true, silent = true, expr = true })
+          end
+        },
+
+        quick_lint_js = {
+          filetypes = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'html', 'htmldjango' },
+        },
+
+        eslint = {},
+        cssls = {},
+
+        jdtls = {},  -- For Java
 
         lua_ls = {
           -- cmd = {...},
