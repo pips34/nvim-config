@@ -747,14 +747,32 @@ require('lazy').setup {
         clangd = {},
         -- gopls = {},
         pyright = {},
+        dockerls = {},
+        omnisharp = {
+          cmd = { "omnisharp" },
+          enable_roslyn_analyzers = true,
+          organize_imports_on_format = true,
+          enable_import_completion = true,
+
+          handlers = {
+            ["textDocument/codeAction"] = function (...)
+              vim.lsp.handlers["textDocument/codeAction"](...)
+            end
+          },
+
+          on_attach = function (client, bufnr)
+            local opts = { noremap = true, silent = true, buffer = bufnr }
+            vim.keymap.set("n", "<leader>ns", ":lua vim.lsp.buf.code_action()<CR>", opts)
+          end
+        },
         bashls = {
           filetypes = { 'sh', '' },
         },
-        csharp_ls = {
-          config = {
-            previewer = true
-          },
-        },
+        -- csharp_ls = {
+        --   config = {
+        --     previewer = true
+        --   },
+        -- },
         marksman = {},
         -- ember = {
         --   filetypes = { 'handlebars', 'typescript', 'javascript', 'typescript.glimmer', 'javascript.glimmer', 'htmldjango' },
