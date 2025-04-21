@@ -187,7 +187,7 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
+vim.opt.scrolloff = 4
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
@@ -286,25 +286,31 @@ require('lazy').setup {
   },
 
   {
-    'jose-elias-alvarez/null-ls.nvim',
-    requires = { 'nvim-lua/plenary.nvim' },
+    "nvimtools/none-ls.nvim", -- ← replacement for "jose-elias-alvarez/null-ls.nvim"
+    dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
-      local null_ls = require('null-ls')
+      local null_ls = require("null-ls")
+
       null_ls.setup({
         sources = {
           null_ls.builtins.formatting.prettier.with({
-            extra_filetypes = { 'javascript', 'typescript', 'css', 'scss', 'json', 'markdown' },
+            extra_filetypes = { "javascript", "typescript", "css", "scss", "json", "markdown" },
           }),
         },
       })
 
-      -- Keybinding for Prettier
-      vim.api.nvim_set_keymap('n', '<leader>p', ':lua vim.lsp.buf.format({ async = true })<CR>', { noremap = true, silent = true })
+      -- Format on save
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        pattern = { "*.js", "*.jsx", "*.ts", "*.tsx", "*.css", "*.scss", "*.json", "*.md" },
+        callback = function()
+          vim.lsp.buf.format({ async = true })
+        end,
+      })
 
-      -- Autocommand to format on save
-      vim.cmd([[
-            autocmd BufWritePre *.js,*.jsx,*.ts,*.tsx,*.css,*.scss,*.json,*.md lua vim.lsp.buf.format({ async = true })
-            ]])
+      -- Format manually with <leader>p
+      vim.keymap.set("n", "<leader>p", function()
+        vim.lsp.buf.format({ async = true })
+      end, { noremap = true, silent = true })
     end,
   },
 
@@ -367,16 +373,16 @@ require('lazy').setup {
     end,
   },
 
-  {
-    "nvimtools/none-ls.nvim",
-    optional = true,
-    opts = function(_, opts)
-      local nls = require("null-ls")
-      opts.sources = vim.list_extend(opts.sources or {}, {
-        nls.builtins.diagnostics.markdownlint,
-      })
-    end,
-  },
+  -- {
+  --   "nvimtools/none-ls.nvim",
+  --   optional = true,
+  --   opts = function(_, opts)
+  --     local nls = require("null-ls")
+  --     opts.sources = vim.list_extend(opts.sources or {}, {
+  --       nls.builtins.diagnostics.markdownlint,
+  --     })
+  --   end,
+  -- },
 
   {
     "mfussenegger/nvim-lint",
@@ -607,6 +613,23 @@ require('lazy').setup {
     },
   },
 
+  {
+    "pmizio/typescript-tools.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "neovim/nvim-lspconfig",
+    },
+    ft = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+    opts = {
+      settings = {
+        separate_diagnostic_server = true,
+        publish_diagnostic_on = "insert_leave",
+        expose_as_code_action = "all",
+        tsserver_plugins = {},
+      },
+    },
+  },
+
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
@@ -748,6 +771,11 @@ require('lazy').setup {
         -- gopls = {},
         pyright = {},
         dockerls = {},
+        sqlls = {
+          cmd = { "sql-language-server", "up" },
+          filetypes = { "sql" },
+          root_dir = require("lspconfig.util").root_pattern(".git", "."),
+        },
         omnisharp = {
           cmd = { "omnisharp" },
           enable_roslyn_analyzers = true,
@@ -768,12 +796,7 @@ require('lazy').setup {
         bashls = {
           filetypes = { 'sh', '' },
         },
-        -- csharp_ls = {
-        --   config = {
-        --     previewer = true
-        --   },
-        -- },
-        marksman = {},
+        -- marksman = {},
         -- ember = {
         --   filetypes = { 'handlebars', 'typescript', 'javascript', 'typescript.glimmer', 'javascript.glimmer', 'htmldjango' },
         -- },
@@ -784,22 +807,6 @@ require('lazy').setup {
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         --
-
-        -- But for many setups, the LSP (`tsserver`) will work just fine
-        -- DEPRECATED
-        -- tsserver = {
-        --   on_attach = function(_, bufnr)
-        --     vim.api.nvim_buf_set_keymap(bufnr, 'i', '<C-y>', 'compe#confirm("<C-y>")', { noremap = true, silent = true, expr = true })
-        --     vim.api.nvim_buf_set_keymap(bufnr, 'i', '<C-y>', 'emmet#expandAbbr()', { noremap = true, silent = true, expr = true })
-        --   end
-        -- },
-
-        -- ts_ls = {
-        --   on_attach = function(_, bufnr)
-        --     vim.api.nvim_buf_set_keymap(bufnr, 'i', '<C-y>', 'compe#confirm("<C-y>")', { noremap = true, silent = true, expr = true })
-        --     vim.api.nvim_buf_set_keymap(bufnr, 'i', '<C-y>', 'emmet#expandAbbr()', { noremap = true, silent = true, expr = true })
-        --   end
-        -- },
 
         tailwindcss = {},
 
