@@ -93,36 +93,36 @@ vim.g.maplocalleader = ' '
 -- SOME OF MY OWN KEYMAPS :)
 -- ================================================================================================================
 
-vim.keymap.set("n", "<leader>ne", ":Explore<enter>", { desc = "Use this buffer to explore" })
-vim.keymap.set("n", "<leader>nv", ":Vexplore!<enter>", { desc = "Open buffer in vertical split to explore" })
-vim.keymap.set("n", "<leader>nl", ":Vexplore<enter>", { desc = "Open buffer in vertical split on the left to explore" })
-vim.keymap.set("n", "<leader>nt", ":Texplore<enter>", { desc = "Open buffer in new tab to explore" })
+vim.keymap.set('n', '<leader>ne', ':Explore<enter>', { desc = 'Use this buffer to explore' })
+vim.keymap.set('n', '<leader>nv', ':Vexplore!<enter>', { desc = 'Open buffer in vertical split to explore' })
+vim.keymap.set('n', '<leader>nl', ':Vexplore<enter>', { desc = 'Open buffer in vertical split on the left to explore' })
+vim.keymap.set('n', '<leader>nt', ':Texplore<enter>', { desc = 'Open buffer in new tab to explore' })
 
-vim.keymap.set("n", "<leader>nn", ":NERDTreeToggle<enter>", { desc = "Toggle side explorer" })
-vim.keymap.set("n", "<leader>t", ":terminal<enter>", { desc = "Pull up a terminal in the current window" })
+vim.keymap.set('n', '<leader>nn', ':NERDTreeToggle<enter>', { desc = 'Toggle side explorer' })
+vim.keymap.set('n', '<leader>t', ':terminal<enter>', { desc = 'Pull up a terminal in the current window' })
 
-vim.keymap.set("n", "U", "<C-r>", { desc = "Re-do" })
+vim.keymap.set('n', 'U', '<C-r>', { desc = 'Re-do' })
 
 -- TODO: KEYMAPS to resize windows
 
 -- Stolen from PRIME, this centers my cursor after CTRL+U or CTRL+D to go up and down half page
-vim.keymap.set("n", "<C-d>", "<C-d>zz", { noremap = true, silent = true })
-vim.keymap.set("n", "<C-u>", "<C-u>zz", { noremap = true, silent = true })
+vim.keymap.set('n', '<C-d>', '<C-d>zz', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-u>', '<C-u>zz', { noremap = true, silent = true })
 
 -- To search word (and search back) centering the screen (inspired by the ones above!)
-vim.keymap.set("n", "*", "*zz", { noremap = true, silent = true })
-vim.keymap.set("n", "#", "#zz", { noremap = true, silent = true })
-vim.keymap.set("n", "n", "nzz", { noremap = true, silent = true })
-vim.keymap.set("n", "N", "Nzz", { noremap = true, silent = true })
+vim.keymap.set('n', '*', '*zz', { noremap = true, silent = true })
+vim.keymap.set('n', '#', '#zz', { noremap = true, silent = true })
+vim.keymap.set('n', 'n', 'nzz', { noremap = true, silent = true })
+vim.keymap.set('n', 'N', 'Nzz', { noremap = true, silent = true })
 
 -- When using 'f' / F' and 't' / 'T', I like to invert the behavior of ',' and ';'
 -- So that, if I press 'f' or 't', I'll search forwards and keep searching forwards with ',', and backwards with ';'
 -- If I press 'F' or 'T', I'll search backwards and keep searching backwards with ',', and forwards with ';'
-vim.api.nvim_set_keymap("n", ";", ",", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", ",", ";", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', ';', ',', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', ',', ';', { noremap = true, silent = true })
 
-vim.api.nvim_set_keymap("x", ";", ",", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("x", ",", ";", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('x', ';', ',', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('x', ',', ';', { noremap = true, silent = true })
 
 -- ================================================================================================================
 
@@ -131,7 +131,7 @@ vim.api.nvim_set_keymap("x", ",", ";", { noremap = true, silent = true })
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
-vim.opt.colorcolumn = "120"
+vim.opt.colorcolumn = '120'
 
 -- Make line numbers default
 vim.opt.number = true
@@ -270,46 +270,46 @@ require('lazy').setup {
   {
     'prettier/vim-prettier',
     run = 'npm install',
-    ft = {'javascript', 'typescript', 'css', 'scss', 'json', 'markdown'},
+    ft = { 'javascript', 'typescript', 'css', 'scss', 'json', 'markdown' },
     config = function()
       vim.g['prettier#config#config_precedence'] = 'prefer-file'
       vim.g['prettier#config#trailing_comma'] = 'es5'
       vim.g['prettier#config#single_quote'] = false
       vim.g['prettier#config#jsx_single_quote'] = false
-      vim.g['prettier#config#tab_width'] = 4
+      vim.g['prettier#config#tab_width'] = 2
       vim.g['prettier#config#use_tabs'] = false
       vim.api.nvim_set_keymap('n', '<leader>p', ':Prettier<CR>', { noremap = true, silent = true })
-      vim.cmd([[
+      vim.cmd [[
             autocmd BufWritePre *.js,*.jsx,*.ts,*.tsx,*.css,*.scss,*.json,*.md Prettier
-            ]])
+            ]]
     end,
   },
 
   {
-    "nvimtools/none-ls.nvim", -- ← replacement for "jose-elias-alvarez/null-ls.nvim"
-    dependencies = { "nvim-lua/plenary.nvim" },
+    'nvimtools/none-ls.nvim', -- ← replacement for "jose-elias-alvarez/null-ls.nvim"
+    dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
-      local null_ls = require("null-ls")
+      local null_ls = require 'null-ls'
 
-      null_ls.setup({
+      null_ls.setup {
         sources = {
-          null_ls.builtins.formatting.prettier.with({
-            extra_filetypes = { "javascript", "typescript", "css", "scss", "json", "markdown" },
-          }),
+          null_ls.builtins.formatting.prettier.with {
+            extra_filetypes = { 'javascript', 'typescript', 'css', 'scss', 'json', 'markdown' },
+          },
         },
-      })
+      }
 
       -- Format on save
-      vim.api.nvim_create_autocmd("BufWritePre", {
-        pattern = { "*.js", "*.jsx", "*.ts", "*.tsx", "*.css", "*.scss", "*.json", "*.md" },
+      vim.api.nvim_create_autocmd('BufWritePre', {
+        pattern = { '*.js', '*.jsx', '*.ts', '*.tsx', '*.css', '*.scss', '*.json', '*.md' },
         callback = function()
-          vim.lsp.buf.format({ async = true })
+          vim.lsp.buf.format { async = true }
         end,
       })
 
       -- Format manually with <leader>p
-      vim.keymap.set("n", "<leader>p", function()
-        vim.lsp.buf.format({ async = true })
+      vim.keymap.set('n', '<leader>p', function()
+        vim.lsp.buf.format { async = true }
       end, { noremap = true, silent = true })
     end,
   },
@@ -327,49 +327,47 @@ require('lazy').setup {
   { 'numToStr/Comment.nvim', opts = {} },
 
   {
-    "iamcco/markdown-preview.nvim",
-    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    'iamcco/markdown-preview.nvim',
+    cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
     build = function()
-      vim.fn["mkdp#util#install"]()
+      vim.fn['mkdp#util#install']()
     end,
     keys = {
-    {
-      "<leader>pv",
-        ft = "markdown",
-        "<cmd>MarkdownPreviewToggle<cr>",
-        desc = "Markdown Preview",
+      {
+        '<leader>pv',
+        ft = 'markdown',
+        '<cmd>MarkdownPreviewToggle<cr>',
+        desc = 'Markdown Preview',
       },
     },
     config = function()
-      vim.cmd([[do FileType]])
+      vim.cmd [[do FileType]]
     end,
   },
 
   {
-    "lukas-reineke/headlines.nvim",
+    'lukas-reineke/headlines.nvim',
     opts = function()
       local opts = {}
-      for _, ft in ipairs({}) do
+      for _, ft in ipairs {} do
         opts[ft] = {
           headline_highlights = {},
           bullets = {},
         }
         for i = 1, 6 do
-          local hl = "Headline" .. i
-          vim.api.nvim_set_hl(0, hl, { link = "Headline", default = true })
+          local hl = 'Headline' .. i
+          vim.api.nvim_set_hl(0, hl, { link = 'Headline', default = true })
           table.insert(opts[ft].headline_highlights, hl)
         end
       end
       return opts
     end,
-    ft = { "markdown", "norg", "rmd", "org" },
+    ft = { 'markdown', 'norg', 'rmd', 'org' },
     config = function(_, opts)
-      vim.schedule(
-        function ()
-          require("headlines").setup(opts)
-          require("headlines").refresh()
-        end
-      )
+      vim.schedule(function()
+        require('headlines').setup(opts)
+        require('headlines').refresh()
+      end)
     end,
   },
 
@@ -385,11 +383,11 @@ require('lazy').setup {
   -- },
 
   {
-    "mfussenegger/nvim-lint",
+    'mfussenegger/nvim-lint',
     optional = true,
     opts = {
       linters_by_ft = {
-        markdown = { "markdownlint" },
+        markdown = { 'markdownlint' },
       },
     },
   },
@@ -562,69 +560,150 @@ require('lazy').setup {
 
   -- Hardpoon
   {
-    "ThePrimeagen/harpoon",
-    branch = "harpoon2",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    config = function ()
+    'ThePrimeagen/harpoon',
+    branch = 'harpoon2',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
       -- Harpoon setup, copy - pasta-ed from the repo's README.md
-      local harpoon = require("harpoon")
-      harpoon.setup({})
+      local harpoon = require 'harpoon'
+      harpoon.setup {}
 
       -- basic telescope configuration
-      local conf = require("telescope.config").values
+      local conf = require('telescope.config').values
       local function toggle_telescope(harpoon_files)
         local file_paths = {}
         for _, item in ipairs(harpoon_files.items) do
           table.insert(file_paths, item.value)
         end
 
-        require("telescope.pickers").new({}, {
-          prompt_title = "Harpoon",
-          finder = require("telescope.finders").new_table({
-            results = file_paths,
-          }),
-          previewer = conf.file_previewer({}),
-          sorter = conf.generic_sorter({}),
-        }):find()
+        require('telescope.pickers')
+          .new({}, {
+            prompt_title = 'Harpoon',
+            finder = require('telescope.finders').new_table {
+              results = file_paths,
+            },
+            previewer = conf.file_previewer {},
+            sorter = conf.generic_sorter {},
+          })
+          :find()
       end
-      vim.keymap.set("n", "<leader>ht", function() toggle_telescope(harpoon:list()) end,
-        { desc = "Open harpoon window" })
-
+      vim.keymap.set('n', '<leader>ht', function()
+        toggle_telescope(harpoon:list())
+      end, { desc = 'Open harpoon window' })
     end,
     keys = {
-      { "<leader>ha", function() require("harpoon"):list():add() end, desc = "Add file to Harpoon" },
-      { "<leader>hd", function() require("harpoon"):list():remove() end, desc = "Remove file from Harpoon" },
-      { "<leader>hc", function() require("harpoon"):list():clear() end, desc = "Clear all from Harpoon" },
+      {
+        '<leader>ha',
+        function()
+          require('harpoon'):list():add()
+        end,
+        desc = 'Add file to Harpoon',
+      },
+      {
+        '<leader>hd',
+        function()
+          require('harpoon'):list():remove()
+        end,
+        desc = 'Remove file from Harpoon',
+      },
+      {
+        '<leader>hc',
+        function()
+          require('harpoon'):list():clear()
+        end,
+        desc = 'Clear all from Harpoon',
+      },
 
-      { "<leader>hh", function() local harpoon = require("harpoon") harpoon.ui:toggle_quick_menu(harpoon:list()) end, desc = "Toggle Harpoon quick menu" },
+      {
+        '<leader>hh',
+        function()
+          local harpoon = require 'harpoon'
+          harpoon.ui:toggle_quick_menu(harpoon:list())
+        end,
+        desc = 'Toggle Harpoon quick menu',
+      },
 
-      { "<leader>1", function() require("harpoon"):list():select(1) end, desc = "Harpoon to file 1" },
-      { "<leader>2", function() require("harpoon"):list():select(2) end, desc = "Harpoon to file 2" },
-      { "<leader>3", function() require("harpoon"):list():select(3) end, desc = "Harpoon to file 3" },
-      { "<leader>4", function() require("harpoon"):list():select(4) end, desc = "Harpoon to file 4" },
-      { "<leader>5", function() require("harpoon"):list():select(5) end, desc = "Harpoon to file 5" },
-      { "<leader>6", function() require("harpoon"):list():select(6) end, desc = "Harpoon to file 6" },
-      { "<leader>7", function() require("harpoon"):list():select(7) end, desc = "Harpoon to file 7" },
-      { "<leader>8", function() require("harpoon"):list():select(8) end, desc = "Harpoon to file 8" },
-      { "<leader>9", function() require("harpoon"):list():select(9) end, desc = "Harpoon to file 9" },
+      {
+        '<leader>1',
+        function()
+          require('harpoon'):list():select(1)
+        end,
+        desc = 'Harpoon to file 1',
+      },
+      {
+        '<leader>2',
+        function()
+          require('harpoon'):list():select(2)
+        end,
+        desc = 'Harpoon to file 2',
+      },
+      {
+        '<leader>3',
+        function()
+          require('harpoon'):list():select(3)
+        end,
+        desc = 'Harpoon to file 3',
+      },
+      {
+        '<leader>4',
+        function()
+          require('harpoon'):list():select(4)
+        end,
+        desc = 'Harpoon to file 4',
+      },
+      {
+        '<leader>5',
+        function()
+          require('harpoon'):list():select(5)
+        end,
+        desc = 'Harpoon to file 5',
+      },
+      {
+        '<leader>6',
+        function()
+          require('harpoon'):list():select(6)
+        end,
+        desc = 'Harpoon to file 6',
+      },
+      {
+        '<leader>7',
+        function()
+          require('harpoon'):list():select(7)
+        end,
+        desc = 'Harpoon to file 7',
+      },
+      {
+        '<leader>8',
+        function()
+          require('harpoon'):list():select(8)
+        end,
+        desc = 'Harpoon to file 8',
+      },
+      {
+        '<leader>9',
+        function()
+          require('harpoon'):list():select(9)
+        end,
+        desc = 'Harpoon to file 9',
+      },
 
-      { "<leader>hp", function() end, desc = "Prev Harpoon list buffer" },
-      { "<leader>hn", function() end, desc = "Next Harpoon list buffer" },
+      { '<leader>hp', function() end, desc = 'Prev Harpoon list buffer' },
+      { '<leader>hn', function() end, desc = 'Next Harpoon list buffer' },
     },
   },
 
   {
-    "pmizio/typescript-tools.nvim",
+    'pmizio/typescript-tools.nvim',
     dependencies = {
-      "nvim-lua/plenary.nvim",
-      "neovim/nvim-lspconfig",
+      'nvim-lua/plenary.nvim',
+      'neovim/nvim-lspconfig',
     },
-    ft = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+    ft = { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact' },
     opts = {
       settings = {
         separate_diagnostic_server = true,
-        publish_diagnostic_on = "insert_leave",
-        expose_as_code_action = "all",
+        publish_diagnostic_on = 'insert_leave',
+        expose_as_code_action = 'all',
         tsserver_plugins = {},
       },
     },
@@ -772,26 +851,26 @@ require('lazy').setup {
         pyright = {},
         dockerls = {},
         sqlls = {
-          cmd = { "sql-language-server", "up" },
-          filetypes = { "sql" },
-          root_dir = require("lspconfig.util").root_pattern(".git", "."),
+          cmd = { 'sql-language-server', 'up' },
+          filetypes = { 'sql' },
+          root_dir = require('lspconfig.util').root_pattern('.git', '.'),
         },
         omnisharp = {
-          cmd = { "omnisharp" },
+          cmd = { 'omnisharp' },
           enable_roslyn_analyzers = true,
           organize_imports_on_format = true,
           enable_import_completion = true,
 
           handlers = {
-            ["textDocument/codeAction"] = function (...)
-              vim.lsp.handlers["textDocument/codeAction"](...)
-            end
+            ['textDocument/codeAction'] = function(...)
+              vim.lsp.handlers['textDocument/codeAction'](...)
+            end,
           },
 
-          on_attach = function (client, bufnr)
+          on_attach = function(client, bufnr)
             local opts = { noremap = true, silent = true, buffer = bufnr }
-            vim.keymap.set("n", "<leader>ns", ":lua vim.lsp.buf.code_action()<CR>", opts)
-          end
+            vim.keymap.set('n', '<leader>ns', ':lua vim.lsp.buf.code_action()<CR>', opts)
+          end,
         },
         bashls = {
           filetypes = { 'sh', '' },
@@ -816,15 +895,15 @@ require('lazy').setup {
           on_attach = function(_, bufnr)
             vim.api.nvim_buf_set_keymap(bufnr, 'i', '<C-y>', 'compe#confirm("<C-y>")', { noremap = true, silent = true, expr = true })
             vim.api.nvim_buf_set_keymap(bufnr, 'i', '<C-y>', 'emmet#expandAbbr()', { noremap = true, silent = true, expr = true })
-          end
+          end,
         },
 
         emmet_ls = {
-          filetypes = { 'html', 'templ', 'htmldjango', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
+          filetypes = { 'html', 'templ', 'htmldjango' },
           on_attach = function(_, bufnr)
             vim.api.nvim_buf_set_keymap(bufnr, 'i', '<C-y>', 'compe#confirm("<C-y>")', { noremap = true, silent = true, expr = true })
             vim.api.nvim_buf_set_keymap(bufnr, 'i', '<C-y>', 'emmet#expandAbbr()', { noremap = true, silent = true, expr = true })
-          end
+          end,
         },
 
         quick_lint_js = {
@@ -834,7 +913,7 @@ require('lazy').setup {
         eslint = {},
         cssls = {},
 
-        jdtls = {},  -- For Java
+        jdtls = {}, -- For Java
 
         lua_ls = {
           -- cmd = {...},
@@ -895,25 +974,33 @@ require('lazy').setup {
     end,
   },
 
-  -- { -- Autoformat
-  --   'stevearc/conform.nvim',
-  --   opts = {
-  --     notify_on_error = false,
-  --     format_on_save = {
-  --       timeout_ms = 500,
-  --       jsp_fallback = true,
-  --     },
-  --     formatters_by_ft = {
-  --       lua = { 'stylua' },
-  --       -- Conform can also run multiple formatters sequentially
-  --       -- python = { "isort", "black" },
-  --       --
-  --       -- You can use a sub-list to tell conform to run *until* a formatter
-  --       -- is found.
-  --       -- javascript = { { "prettierd", "prettier" } },
-  --     },
-  --   },
-  -- },
+  { -- Autoformat
+    'stevearc/conform.nvim',
+    opts = {
+      notify_on_error = false,
+      format_on_save = {
+        timeout_ms = 500,
+        jsp_fallback = true,
+      },
+      formatters_by_ft = {
+        lua = { 'stylua' },
+        -- Conform can also run multiple formatters sequentially
+        -- python = { "isort", "black" },
+        --
+        -- You can use a sub-list to tell conform to run *until* a formatter
+        -- is found.
+        javascript = { 'prettier' },
+        typescript = { 'prettier' },
+        javascriptreact = { 'prettier' },
+        typescriptreact = { 'prettier' },
+      },
+      formatters = {
+        prettier = {
+          prepend_args = { '--tab-width', '2', '--use-tabs', 'false' },
+        },
+      },
+    },
+  },
 
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -1121,16 +1208,16 @@ require('lazy').setup {
     end,
   },
 
-  {'nvim-neotest/nvim-nio'},
+  { 'nvim-neotest/nvim-nio' },
 
   {
     'mfussenegger/nvim-dap',
     config = function()
-      local dap = require('dap')
+      local dap = require 'dap'
       dap.adapters.coreclr = {
         type = 'executable',
         command = '/usr/local/netcoredbg',
-        args = {'--interpreter=vscode'},
+        args = { '--interpreter=vscode' },
       }
       dap.configurations.cs = {
         {
@@ -1140,7 +1227,7 @@ require('lazy').setup {
           program = function()
             return vim.fn.input('Path to dll: ', vim.fn.getcwd() .. '/bin/Debug/net8.0/', 'file')
           end,
-        }
+        },
       }
 
       vim.fn.sign_define('DapBreakpoint', { text = '🐞', texthl = '', linehl = '', numhl = '' })
@@ -1150,8 +1237,18 @@ require('lazy').setup {
       vim.api.nvim_set_keymap('n', '<F7>', ":lua require('dap').step_into()<CR>", { noremap = true, silent = true })
       vim.api.nvim_set_keymap('n', '<F8>', ":lua require('dap').step_out()<CR>", { noremap = true, silent = true })
       vim.api.nvim_set_keymap('n', '<leader>b', ":lua require('dap').toggle_breakpoint()<CR>", { noremap = true, silent = true })
-      vim.api.nvim_set_keymap('n', '<Leader>B', ":lua require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>", { noremap = true, silent = true })
-      vim.api.nvim_set_keymap('n', '<Leader>lp', ":lua require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>", { noremap = true, silent = true })
+      vim.api.nvim_set_keymap(
+        'n',
+        '<Leader>B',
+        ":lua require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>",
+        { noremap = true, silent = true }
+      )
+      vim.api.nvim_set_keymap(
+        'n',
+        '<Leader>lp',
+        ":lua require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>",
+        { noremap = true, silent = true }
+      )
       vim.api.nvim_set_keymap('n', '<Leader>dr', ":lua require('dap').repl.open()<CR>", { noremap = true, silent = true })
       vim.api.nvim_set_keymap('n', '<Leader>dl', ":lua require('dap').run_last()<CR>", { noremap = true, silent = true })
     end,
@@ -1159,7 +1256,7 @@ require('lazy').setup {
   {
     'rcarriga/nvim-dap-ui',
     config = function()
-      local dap, dapui = require('dap'), require('dapui')
+      local dap, dapui = require 'dap', require 'dapui'
       dapui.setup {
         icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
         controls = {
@@ -1177,18 +1274,17 @@ require('lazy').setup {
         },
       }
 
-      dap.listeners.after.event_initialized["dapui_config"] = function()
+      dap.listeners.after.event_initialized['dapui_config'] = function()
         dapui.open()
       end
 
-      dap.listeners.before.event_terminated["dapui_config"] = function()
+      dap.listeners.before.event_terminated['dapui_config'] = function()
         dapui.close()
       end
 
-      dap.listeners.before.event_exited["dapui_config"] = function()
+      dap.listeners.before.event_exited['dapui_config'] = function()
         dapui.close()
       end
-
     end,
   },
 
