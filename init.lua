@@ -90,9 +90,33 @@ P.S. You can delete this when you're done too. It's your config now! :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
--- SOME OF MY OWN KEYMAPS :)
--- ================================================================================================================
+-- Some configs I stole from this vid: ttps://www.youtube.com/watch?v=JIvFToEw9M0
+vim.opt.wrap = true -- Makes lines wrap around
+vim.opt.linebreak = true -- Avoids words wrapping around, instead if wraps around but it does that on whitespace only
+-- vim.opt.cursorline = true  -- Shows the line where the cursor is
+-- vim.opt.cursorcolumn = true  -- Shows the column where the cursor is
+-- vim.opt.backup = true  -- Makes a backup when you save a file or something?
+-- vim.opt.scrolloff = 4  -- For preventing the cursor to get to close to the bottom / top of the screen
+-- vim.keymap.set('i', 'jk', '<Esc>') -- Sets a custom set of key strokes instead of escape from Insert mode (maybe change for something more convenient)
+-- vim.opt.mouse = 'a' -- Enables mouse
+-- vim.opt.ignorecase = true -- Ignores case when searching with /
+-- vim.opt.smartcase = true -- Finds all if not capitalized, finds specific instances if capitalized
+-- vim.opt.inccommand = 'split' -- Shows preview when replacing with :%s//
+-- vim.opt.undofileA = true -- Retains undo history inbetween sessions
+-- vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' } -- Replaces tab, spaces and nbsp (?) with the corresponding symbols
+--
+-- The following 3 set auto closing parenthesis and brackets -- I have a plugin for it, but it's nice to know I can use that
+-- vim.keymap.set('i', '(', '()<Esc>i')
+-- vim.keymap.set('i', '{', '{}<Esc>i')
+-- vim.keymap.set('i', '[', '[]<Esc>i')
+--
+-- vim.opt.clipboard = 'unnamedplus' -- System clipboard
+--
+-- The following lines makes ALT+J or K move lines around
+vim.keymap.set('n', '<A-j>', ':m .+1<CR>>==')
+vim.keymap.set('n', '<A-k>', ':m .-2<CR>>==')
 
+-- My keymaps
 vim.keymap.set('n', '<leader>ne', ':Explore<enter>', { desc = 'Use this buffer to explore' })
 vim.keymap.set('n', '<leader>nv', ':Vexplore!<enter>', { desc = 'Open buffer in vertical split to explore' })
 vim.keymap.set('n', '<leader>nl', ':Vexplore<enter>', { desc = 'Open buffer in vertical split on the left to explore' })
@@ -848,7 +872,7 @@ require('lazy').setup {
       local servers = {
         clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
         -- NOTE: For Pylyzer to work, I need to download and decompress ERG in ~/.erg, also 'pip install pylyzer' in my venv
         pylyzer = {
           cmd = { 'pylyzer', '--server' },
