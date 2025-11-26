@@ -310,6 +310,59 @@ require('lazy').setup {
   },
 
   {
+    'L3MON4D3/LuaSnip',
+    version = 'v2.*',
+    config = function()
+      local ls = require 'luasnip'
+      local types = require 'luasnip.util.types'
+
+      ls.config.set_config {
+        history = true,
+        updateevents = 'TextChanged,TextChangedI',
+        enable_autosnippets = true,
+        ext_opts = {
+          [types.choiceNode] = {
+            active = {
+              virt_text = { { '<--', 'Error' } },
+            },
+          },
+        },
+      }
+
+      vim.keymap.set({ 'i', 's' }, '<C-k>', function()
+        if ls.expand_or_jumpable() then
+          ls.expand_or_jump()
+        else
+          return '<C-k>'
+        end
+      end, { expr = true, silent = true })
+
+      vim.keymap.set({ 'i', 's' }, '<C-j>', function()
+        if ls.jumpable(-1) then
+          ls.jump(-1)
+          return ''
+        else
+          return '<C-j>'
+        end
+      end, { expr = true, silent = true })
+
+      vim.keymap.set('i', '<C-l>', function()
+        if ls.choice_active() then
+          ls.change_choice(1)
+        else
+          return '<C-l>'
+        end
+      end)
+
+      ls.add_snippets('python', {
+        ls.parser.parse_snippet('atask', 'def $1($2**kwargs) -> None:\n    task_instance: models.TaskInstance = kwargs["ti"]\n    $0'),
+      })
+    end,
+
+    build = 'make install_jsregexp',
+  },
+
+  {
     'nvimtools/none-ls.nvim', -- ← replacement for "jose-elias-alvarez/null-ls.nvim"
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
@@ -1046,18 +1099,18 @@ require('lazy').setup {
     event = 'InsertEnter',
     dependencies = {
       -- Snippet Engine & its associated nvim-cmp source
-      {
-        'L3MON4D3/LuaSnip',
-        build = (function()
-          -- Build Step is needed for regex support in snippets
-          -- This step is not supported in many windows environments
-          -- Remove the below condition to re-enable on windows
-          if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
-            return
-          end
-          return 'make install_jsregexp'
-        end)(),
-      },
+      -- {
+      --   'L3MON4D3/LuaSnip',
+      --   build = (function()
+      --     -- Build Step is needed for regex support in snippets
+      --     -- This step is not supported in many windows environments
+      --     -- Remove the below condition to re-enable on windows
+      --     if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
+      --       return
+      --     end
+      --     return 'make install_jsregexp'
+      --   end)(),
+      -- },
       'saadparwaiz1/cmp_luasnip',
 
       -- Adds other completion capabilities.
@@ -1076,7 +1129,7 @@ require('lazy').setup {
       -- See `:help cmp`
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
-      luasnip.config.setup {}
+      -- luasnip.config.setup {}
 
       cmp.setup {
         snippet = {
