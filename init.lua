@@ -939,20 +939,20 @@ require('lazy').setup {
         -- gopls = {},
         pyright = {},
         -- NOTE: For Pylyzer to work, I need to download and decompress ERG in ~/.erg, also 'pip install pylyzer' in my venv
-        pylyzer = {
-          cmd = { 'pylyzer', '--server' },
-          cmd_env = {
-            ERG_PATH = vim.fn.expand '~/.erg',
-          },
-          settings = {
-            python = {
-              checkOnType = false,
-              diagnostics = true,
-              inlayHints = true,
-              smartCompletion = true,
-            },
-          },
-        },
+        -- pylyzer = {
+        --   cmd = { 'pylyzer', '--server' },
+        --   cmd_env = {
+        --     ERG_PATH = vim.fn.expand '~/.erg',
+        --   },
+        --   settings = {
+        --     python = {
+        --       checkOnType = false,
+        --       diagnostics = true,
+        --       inlayHints = true,
+        --       smartCompletion = true,
+        --     },
+        --   },
+        -- },
         dockerls = {},
         sqlls = {
           cmd = { 'sql-language-server', 'up' },
