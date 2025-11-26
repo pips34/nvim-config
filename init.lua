@@ -357,6 +357,18 @@ require('lazy').setup {
       ls.add_snippets('python', {
         ls.parser.parse_snippet('atask', 'def $1($2**kwargs) -> None:\n    task_instance: models.TaskInstance = kwargs["ti"]\n    $0'),
       })
+
+      ls.add_snippets('python', {
+        ls.parser.parse_snippet('poperator', '$1_task = PythonOperator(\n    task_id="$2",\n    python_callable=$1,\n)'),
+      })
+
+      ls.add_snippets('python', {
+        ls.parser.parse_snippet('boperator', '$1_task = BranchPythonOperator(\n    task_id="$2",\n    python_callable=$1,\n)'),
+      })
+
+      ls.add_snippets('python', {
+        ls.parser.parse_snippet('eoperator', '$1_task = EmptyOperator(task_id="$2")'),
+      })
     end,
 
     build = 'make install_jsregexp',
