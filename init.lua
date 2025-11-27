@@ -360,6 +360,10 @@ require('lazy').setup {
       local i = ls.insert_node
 
       ls.add_snippets('python', {
+        ls.parser.parse_snippet('def', 'def $1($2) -> $3:\n    $0'),
+      })
+
+      ls.add_snippets('python', {
         ls.parser.parse_snippet('atask', 'def $1($2**kwargs) -> None:\n    task_instance: models.TaskInstance = kwargs["ti"]\n    $0'),
       })
 
