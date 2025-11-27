@@ -354,6 +354,11 @@ require('lazy').setup {
         end
       end)
 
+      local s = ls.snippet
+      local t = ls.text_node
+      local f = ls.function_node
+      local i = ls.insert_node
+
       ls.add_snippets('python', {
         ls.parser.parse_snippet('atask', 'def $1($2**kwargs) -> None:\n    task_instance: models.TaskInstance = kwargs["ti"]\n    $0'),
       })
@@ -369,6 +374,53 @@ require('lazy').setup {
       ls.add_snippets('python', {
         ls.parser.parse_snippet('eoperator', '$1_task = EmptyOperator(task_id="$2")'),
       })
+
+      ls.add_snippets('python', {
+        s('adag', {
+          t 'import datetime as dt',
+          t { '', 'import logging' },
+          t { '', 'import pendulum' },
+          t { '', '', 'from airflow import DAG' },
+          t { '', '', '_logger: logging.Logger = logging.getLogger("' },
+          f(function()
+            return vim.fn.expand '%:t:r'
+          end),
+          t '")',
+          t { '', '_timezone: pendulum.Timezone = pendulum.timezone("America/Bogota")' },
+          t { '', '', '', 'with DAG(' },
+          t { '', '    dag_id="' },
+          f(function()
+            return vim.fn.expand '%:t:r'
+          end),
+          t '",',
+          t { '', '    description=' },
+          i(1, ''),
+          t ',',
+          t { '', '    catchup=False,' },
+          t { '', '    default_args={' },
+          t { '', '        "owner": "airflow",' },
+          t { '', '    },' },
+          t { '', '    schedule_interval=' },
+          i(2, 'None'),
+          t ',',
+          t { '', '    start_date=dt.datetime(year=' },
+          i(3, '2025'),
+          t ', month=',
+          i(4, ''),
+          t ', day=',
+          i(5, ''),
+          t ', tzinfo=_timezone),',
+          t { '', '    tags=[' },
+          i(6, ''),
+          t ', "sequoia", "cloud"],',
+          t { '', '):', '' },
+          t { '', '    # Task Definitions' },
+          t { '', '    pass', '' },
+          t { '', '    # DAG Flow Definition' },
+        }),
+      })
+
+      -- More snippets here --
     end,
 
     build = 'make install_jsregexp',
