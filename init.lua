@@ -880,7 +880,29 @@ require('lazy').setup {
 
           -- Rename the variable under your cursor
           --  Most Language Servers support renaming across files, etc.
-          map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+          -- map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+
+          -- My own keymap (found in a random blog :v)
+          -- It effectively presses CTRL+F right after renaming, so that I can use VIM motions to rename stuff
+          -- Much harder than you'd think
+          vim.keymap.set('n', '<leader>rn', function()
+            local cmdId
+            cmdId = vim.api.nvim_create_autocmd({ 'CmdlineEnter' }, {
+              callback = function()
+                local key = vim.api.nvim_replace_termcodes('<C-f>', true, false, true)
+                vim.api.nvim_feedkeys(key, 'c', false)
+                vim.api.nvim_feedkeys('0', 'n', false)
+                cmdId = nil
+                return true
+              end,
+            })
+            vim.lsp.buf.rename()
+            vim.defer_fn(function()
+              if cmdId then
+                vim.api.nvim_del_autocmd(cmdId)
+              end
+            end, 500)
+          end)
 
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
