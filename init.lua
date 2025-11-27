@@ -354,6 +354,11 @@ require('lazy').setup {
         end
       end)
 
+      local s = ls.snippet
+      local t = ls.text_node
+      local f = ls.function_node
+      local i = ls.insert_node
+
       ls.add_snippets('python', {
         ls.parser.parse_snippet('atask', 'def $1($2**kwargs) -> None:\n    task_instance: models.TaskInstance = kwargs["ti"]\n    $0'),
       })
@@ -370,14 +375,18 @@ require('lazy').setup {
         ls.parser.parse_snippet('eoperator', '$1_task = EmptyOperator(task_id="$2")'),
       })
 
-      local s = ls.snippet
-      local t = ls.text_node
-      local f = ls.function_node
-      local i = ls.insert_node
-
       ls.add_snippets('python', {
         s('adag', {
-          t 'from airflow import DAG',
+          t 'import datetime as dt',
+          t { '', 'import logging' },
+          t { '', 'import pendulum' },
+          t { '', '', 'from airflow import DAG' },
+          t { '', '', '_logger: logging.Logger = logging.getLogger("' },
+          f(function()
+            return vim.fn.expand '%:t:r'
+          end),
+          t '")',
+          t { '', '_timezone: pendulum.Timezone = pendulum.timezone("America/Bogota")' },
           t { '', '', '', 'with DAG(' },
           t { '', '    dag_id="' },
           f(function()
