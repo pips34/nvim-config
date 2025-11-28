@@ -380,6 +380,10 @@ require('lazy').setup {
       })
 
       ls.add_snippets('python', {
+        ls.parser.parse_snippet('xcomps', 'task_instance.xcom_push(key="$1", value=$1)'),
+      })
+
+      ls.add_snippets('python', {
         s('adag', {
           t 'import datetime as dt',
           t { '', 'import logging' },
