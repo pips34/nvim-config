@@ -1309,8 +1309,8 @@ require('lazy').setup {
       }
 
       -- Load the colorscheme here
-      -- vim.cmd.colorscheme 'tokyonight-night'
-      vim.cmd.colorscheme 'ayu-dark'
+      vim.cmd.colorscheme 'tokyonight-night'
+      -- vim.cmd.colorscheme 'ayu-dark'
       -- vim.cmd.colorscheme 'minischeme'
       -- vim.cmd.colorscheme 'ayu-mirage'
       -- vim.cmd.colorscheme 'desert'
@@ -1402,7 +1402,7 @@ require('lazy').setup {
       local dap = require 'dap'
       dap.adapters.coreclr = {
         type = 'executable',
-        command = '/usr/local/netcoredbg',
+        command = '/opt/netcoredbg/netcoredbg',
         args = { '--interpreter=vscode' },
       }
       dap.configurations.cs = {
@@ -1439,6 +1439,21 @@ require('lazy').setup {
       vim.api.nvim_set_keymap('n', '<Leader>dl', ":lua require('dap').run_last()<CR>", { noremap = true, silent = true })
     end,
   },
+
+  -- .NET debugger
+  {
+    'kmiterror/dotnet-debug.nvim',
+    dependencies = { 'mfussenegger/nvim-dap' },
+    opts = {
+      debugger_path = '/opt/netcoredbg/netcoredbg',
+      signer_path = '',
+    },
+
+    config = function(_, opts)
+      require('dotnet-debug').setup(opts)
+    end,
+  },
+
   {
     'rcarriga/nvim-dap-ui',
     config = function()
