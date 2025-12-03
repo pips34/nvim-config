@@ -127,6 +127,10 @@ vim.keymap.set('n', '<leader>t', ':terminal<enter>', { desc = 'Pull up a termina
 
 vim.keymap.set('n', 'U', '<C-r>', { desc = 'Re-do' })
 
+for _, mode in ipairs { 'n', 'i', 'v', 'x', 'o', 'c', 't' } do
+  vim.keymap.set(mode, '<C-{>', '<C-[>', { noremap = true })
+end
+
 -- TODO: KEYMAPS to resize windows
 
 -- Stolen from PRIME, this centers my cursor after CTRL+U or CTRL+D to go up and down half page
@@ -359,6 +363,8 @@ require('lazy').setup {
       local f = ls.function_node
       local i = ls.insert_node
 
+      -- PYTHON SNIPPETS
+
       ls.add_snippets('python', {
         ls.parser.parse_snippet('def', 'def $1($2) -> $3:\n    $0'),
       })
@@ -426,6 +432,12 @@ require('lazy').setup {
           t { '', '    pass', '' },
           t { '', '    # DAG Flow Definition' },
         }),
+      })
+
+      -- C SNIPPETS
+
+      ls.add_snippets('c', {
+        ls.parser.parse_snippet('cmain', '#include <stdio.h>\n\nint main() {\n    $0\n    return 0;\n}'),
       })
 
       -- More snippets here --
