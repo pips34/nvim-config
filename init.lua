@@ -126,6 +126,7 @@ vim.keymap.set('n', '<leader>nn', ':NERDTreeToggle<enter>', { desc = 'Toggle sid
 vim.keymap.set('n', '<leader>t', ':terminal<enter>', { desc = 'Pull up a terminal in the current window' })
 
 vim.keymap.set('n', 'U', '<C-r>', { desc = 'Re-do' })
+vim.keymap.set('n', '<leader>fp', 'gwip', { desc = 'Fix paragraph linebreaks' })
 
 for _, mode in ipairs { 'n', 'i', 'v', 'x', 'o', 'c', 't' } do
   vim.keymap.set(mode, '<C-{>', '<C-[>', { noremap = true })
