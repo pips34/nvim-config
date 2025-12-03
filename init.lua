@@ -494,12 +494,13 @@ require('lazy').setup {
       'nvim-telescope/telescope.nvim',
     },
     config = function()
+      require('live-preview').setup()
       require('livepreview.config').set {
         browser = 'chromium',
       }
-      require('live-preview').setup()
 
-      vim.keymap.set('n', '<leader>pv', '<CMD>LivePreview start<CR>', { desc = 'Toggle live preview' })
+      vim.keymap.set('n', '<leader>pv', '<CMD>LivePreview start<CR>', { desc = 'Start live preview' })
+      vim.keymap.set('n', '<leader>pc', '<CMD>LivePreview close<CR>', { desc = 'Stop live preview' })
     end,
   },
 
