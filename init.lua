@@ -438,7 +438,7 @@ require('lazy').setup {
       -- C SNIPPETS
 
       ls.add_snippets('c', {
-        ls.parser.parse_snippet('cmain', '#include <stdio.h>\n\nint main() {\n    $0\n    return 0;\n}'),
+        ls.parser.parse_snippet('cmain', '#include <stdio.h>\n\nint main(void) {\n    $0\n    return 0;\n}'),
       })
 
       -- More snippets here --
