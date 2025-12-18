@@ -367,6 +367,10 @@ require('lazy').setup {
       -- PYTHON SNIPPETS
 
       ls.add_snippets('python', {
+        ls.parser.parse_snippet('pmain', 'if __name__ == "__main__":\n    $0'),
+      })
+
+      ls.add_snippets('python', {
         ls.parser.parse_snippet('def', 'def $1($2) -> $3:\n    $0'),
       })
 
