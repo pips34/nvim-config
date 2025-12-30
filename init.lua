@@ -132,6 +132,9 @@ for _, mode in ipairs { 'n', 'i', 'v', 'x', 'o', 'c', 't' } do
   vim.keymap.set(mode, '<C-{>', '<C-[>', { noremap = true })
 end
 
+vim.keymap.set('n', 'ñ', 'o<Esc>', { desc = 'New line below' })
+vim.keymap.set('n', 'Ñ', 'O<Esc>', { desc = 'New line below' })
+
 -- TODO: KEYMAPS to resize windows
 
 -- Stolen from PRIME, this centers my cursor after CTRL+U or CTRL+D to go up and down half page
