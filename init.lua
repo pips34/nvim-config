@@ -1299,6 +1299,20 @@ require('lazy').setup {
   },
 
   -- THEMING SECTION
+
+  {
+    'neanias/everforest-nvim',
+    version = false,
+    lazy = false,
+    priority = 1000, -- make sure to load this before all the other start plugins
+    -- Optional; default configuration will be used if setup isn't called.
+    config = function()
+      require('everforest').setup {
+        -- Your config here
+      }
+    end,
+  },
+
   { -- You can easily change to a different colorscheme.
     -- Change the name of the colorscheme plugin below, and then
     -- change the command in the config to whatever the name of that colorscheme is
@@ -1326,11 +1340,13 @@ require('lazy').setup {
       }
 
       -- Load the colorscheme here
-      vim.cmd.colorscheme 'tokyonight-night'
+      -- vim.cmd.colorscheme 'tokyonight-night'
       -- vim.cmd.colorscheme 'ayu-dark'
       -- vim.cmd.colorscheme 'minischeme'
       -- vim.cmd.colorscheme 'ayu-mirage'
       -- vim.cmd.colorscheme 'desert'
+      -- vim.cmd.colorscheme 'habamax'
+      vim.cmd.colorscheme 'everforest'
     end,
   },
   -- -- Highlight todo, notes, etc in comments
