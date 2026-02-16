@@ -402,7 +402,7 @@ require('lazy').setup {
           t 'import datetime as dt',
           t { '', 'import logging' },
           t { '', 'import pendulum' },
-          t { '', '', 'from airflow import DAG, models' },
+          t { '', '', 'from airflow import DAG' },
           t { '', '', '_logger: logging.Logger = logging.getLogger("' },
           f(function()
             return vim.fn.expand '%:t:r'
