@@ -426,7 +426,7 @@ require('lazy').setup {
           i(2, 'None'),
           t ',',
           t { '', '    start_date=dt.datetime(year=' },
-          i(3, '2025'),
+          i(3, '2026'),
           t ', month=',
           i(4, ''),
           t ', day=',
