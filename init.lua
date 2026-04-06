@@ -144,6 +144,10 @@ vim.keymap.set('v', '<A-k>', ":m '<-2<CR>gv=gv")
 -- Pyright LSP
 vim.keymap.set('n', '<leader>po', ':LspPyrightOrganizeImports<CR>', { desc = 'Use this buffer to explore' })
 
+-- Reselect when indenting
+vim.keymap.set('v', '<', '<gv', { desc = 'Indent left and reselct' })
+vim.keymap.set('v', '>', '>gv', { desc = 'Indent right and reselct' })
+
 vim.keymap.set('n', '<leader>ne', ':Explore<CR>', { desc = 'Use this buffer to explore' })
 vim.keymap.set('n', '<leader>nv', ':Vexplore!<CR>', { desc = 'Open buffer in vertical split to explore' })
 vim.keymap.set('n', '<leader>nl', ':Vexplore<CR>', { desc = 'Open buffer in vertical split on the left to explore' })
