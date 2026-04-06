@@ -84,6 +84,27 @@ I hope you enjoy your Neovim journey,
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
 
+do
+  local orig = vim.lsp.util.make_position_params
+
+  vim.lsp.util.make_position_params = function(bufnr, offset_encoding)
+    bufnr = bufnr or 0
+
+    local clients = vim.lsp.get_clients { bufnr = bufnr }
+    local client = clients[1]
+
+    offset_encoding = offset_encoding or (client and client.offset_encoding) or 'utf-16'
+
+    return orig(bufnr, offset_encoding)
+  end
+end
+
+if vim.lsp.util.jump_to_location then
+  vim.lsp.util.jump_to_location = function(location, offset_encoding, reuse_win)
+    return vim.lsp.util.show_document(location, offset_encoding, { reuse_win = reuse_win })
+  end
+end
+
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -951,6 +972,9 @@ require('lazy').setup {
           --  This is where a variable was first declared, or where a function is defined, etc.
           --  To jump back, press <C-T>.
           map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+
+          -- map('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
+          -- map('gr', vim.lsp.buf.references, '[G]oto [R]eferences')
 
           -- Find references for the word under your cursor.
           map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
