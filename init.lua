@@ -117,6 +117,10 @@ vim.keymap.set('n', '<A-j>', ':m .+1<CR>>==')
 vim.keymap.set('n', '<A-k>', ':m .-2<CR>>==')
 
 -- My keymaps
+
+-- Pyright LSP
+vim.keymap.set('n', '<leader>po', ':LspPyrightOrganizeImports<CR>', { desc = 'Use this buffer to explore' })
+
 vim.keymap.set('n', '<leader>ne', ':Explore<enter>', { desc = 'Use this buffer to explore' })
 vim.keymap.set('n', '<leader>nv', ':Vexplore!<enter>', { desc = 'Open buffer in vertical split to explore' })
 vim.keymap.set('n', '<leader>nl', ':Vexplore<enter>', { desc = 'Open buffer in vertical split on the left to explore' })
@@ -1048,7 +1052,9 @@ require('lazy').setup {
         clangd = {},
         -- gopls = {},
         pyright = {},
-        -- NOTE: For Pylyzer to work, I need to download and decompress ERG in ~/.erg, also 'pip install pylyzer' in my venv
+        -- NOTE: For Pylyzer to work, I need to download and decompress ERG in
+        -- ~/.erg, also 'pip install pylyzer' in my venv, but I found it hard
+        -- to setup.
         -- pylyzer = {
         --   cmd = { 'pylyzer', '--server' },
         --   cmd_env = {
