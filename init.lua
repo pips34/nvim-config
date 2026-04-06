@@ -111,23 +111,25 @@ vim.opt.linebreak = true -- Avoids words wrapping around, instead if wraps aroun
 -- vim.keymap.set('i', '[', '[]<Esc>i')
 --
 -- vim.opt.clipboard = 'unnamedplus' -- System clipboard
---
+
 -- The following lines makes ALT+J or K move lines around
 vim.keymap.set('n', '<A-j>', ':m .+1<CR>>==')
 vim.keymap.set('n', '<A-k>', ':m .-2<CR>>==')
+vim.keymap.set('v', '<A-j>', ":m '>+1<CR>gv=gv")
+vim.keymap.set('v', '<A-k>', ":m '<-2<CR>gv=gv")
 
 -- My keymaps
 
 -- Pyright LSP
 vim.keymap.set('n', '<leader>po', ':LspPyrightOrganizeImports<CR>', { desc = 'Use this buffer to explore' })
 
-vim.keymap.set('n', '<leader>ne', ':Explore<enter>', { desc = 'Use this buffer to explore' })
-vim.keymap.set('n', '<leader>nv', ':Vexplore!<enter>', { desc = 'Open buffer in vertical split to explore' })
-vim.keymap.set('n', '<leader>nl', ':Vexplore<enter>', { desc = 'Open buffer in vertical split on the left to explore' })
-vim.keymap.set('n', '<leader>nt', ':Texplore<enter>', { desc = 'Open buffer in new tab to explore' })
+vim.keymap.set('n', '<leader>ne', ':Explore<CR>', { desc = 'Use this buffer to explore' })
+vim.keymap.set('n', '<leader>nv', ':Vexplore!<CR>', { desc = 'Open buffer in vertical split to explore' })
+vim.keymap.set('n', '<leader>nl', ':Vexplore<CR>', { desc = 'Open buffer in vertical split on the left to explore' })
+vim.keymap.set('n', '<leader>nt', ':Texplore<CR>', { desc = 'Open buffer in new tab to explore' })
 
-vim.keymap.set('n', '<leader>nn', ':NERDTreeToggle<enter>', { desc = 'Toggle side explorer' })
-vim.keymap.set('n', '<leader>t', ':terminal<enter>', { desc = 'Pull up a terminal in the current window' })
+vim.keymap.set('n', '<leader>nn', ':NERDTreeToggle<CR>', { desc = 'Toggle side explorer' })
+vim.keymap.set('n', '<leader>t', ':terminal<CR>', { desc = 'Pull up a terminal in the current window' })
 
 vim.keymap.set('n', 'U', '<C-r>', { desc = 'Re-do' })
 vim.keymap.set('n', '<leader>fp', 'gwip', { desc = 'Fix paragraph linebreaks' })
