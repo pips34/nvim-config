@@ -441,6 +441,18 @@ require('lazy').setup {
       })
 
       ls.add_snippets('python', {
+        s('ghookcursor', {
+          t 'gaussdb_hook = GaussDBhook(gaussdb_conn_id=',
+          i(1, ''),
+          t ')',
+          t { '', 'with gaussdb_hook.get_conn() as conn:', '    with conn.cursor() as cursor:' },
+          t { '', '        cursor.execute(operation=' },
+          i(2, ''),
+          t ')',
+        }),
+      })
+
+      ls.add_snippets('python', {
         s('adag', {
           t 'import datetime as dt',
           t { '', 'import logging' },
