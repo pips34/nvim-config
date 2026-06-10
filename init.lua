@@ -429,6 +429,10 @@ require('lazy').setup {
       })
 
       ls.add_snippets('python', {
+        ls.parser.parse_snippet('xcompl', '$1: $2 = task_instance.xcom_pull(task_ids="$3", key="$1")'),
+      })
+
+      ls.add_snippets('python', {
         s('ghook', {
           t 'gaussdb_hook = GaussDBHook(gaussdb_conn_id=',
           i(1, ''),
