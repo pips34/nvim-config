@@ -482,7 +482,7 @@ require('lazy').setup {
           t { '', '    default_args={' },
           t { '', '        "owner": "airflow",' },
           t { '', '    },' },
-          t { '', '    schedule_interval=' },
+          t { '', '    schedule=' },
           i(2, 'None'),
           t ',',
           t { '', '    start_date=dt.datetime(year=' },
